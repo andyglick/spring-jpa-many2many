@@ -1,13 +1,15 @@
 package com.cloudfoundry.tothought.entities;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name="POST")
@@ -16,13 +18,20 @@ public class Post {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="POST_ID")
-	Integer postId;
+	private Integer postId;
 	
 	@Column(name="TITLE")
-	String title;
-	
+	private String title;
+
 	@Column(name="POST_DATE")
-	Date postDate;
+	private Date postDate;
+
+	@ManyToMany
+	@JoinTable(name = "POST_TAG",
+			joinColumns = {@JoinColumn(name="POST_ID")},
+			inverseJoinColumns = { @JoinColumn(name="TAG_ID")})
+	private List<Tag> tags = new ArrayList<Tag>();
+
 
 	public Integer getPostId() {
 		return postId;
@@ -48,4 +57,11 @@ public class Post {
 		this.postDate = postDate;
 	}
 
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
 }
